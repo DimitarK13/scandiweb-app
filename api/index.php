@@ -1,10 +1,9 @@
 <?php
-   header("Access-Control-Allow-Origin: *");
-   header("Access-Control-Allow-Headers: *");
-   header("Access-Control-Allow-Methods: *");
+  header("Access-Control-Allow-Origin: *");
+  header("Access-Control-Allow-Headers: *");
+  header("Access-Control-Allow-Methods: *");
 
-    class Database
-  {
+  class Database {
     private $host = "localhost";
     private $user = "root";
     private $password = "";
@@ -12,8 +11,7 @@
     private $dsn;
     private $pdo;
 
-    public function __construct()
-    {
+    public function __construct() {
       $this->dsn = "mysql:host=" . $this->host . ";dbname=" . $this->dbname;
 
       $this->pdo = new PDO($this->dsn, $this->user, $this->password);

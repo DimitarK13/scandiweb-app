@@ -14,23 +14,23 @@ function App() {
     axios
       .get('http://localhost/skandiweb-app/api/index.php')
       .then((response) => {
-        const data = response.data;
-        data.forEach((object) => {
-          const { p_sku, p_name, p_price, p_value } = object;
-          setData((prevValues) => {
-            return [
-              ...prevValues,
-              {
-                p_sku,
-                p_name,
-                p_price,
-                p_value,
-              },
-            ];
-          });
-        });
+        setData(response.data);
       });
   }
+
+  const handleDelete = () => {
+    let sku;
+    const checkbox = document.getElementsByClassName('delete-checkbox');
+
+    for (let i = 0; i < checkbox.length; i++) {
+      if (checkbox[i].checked) {
+        const parent = checkbox[i].parentNode;
+        sku = parent.firstChild.textContent;
+        // parent.style.display = 'none';
+        axios.delete(`http://localhost/skandiweb-app/api/index.php${sku}`);
+      }
+    }
+  };
 
   return (
     <div className='container'>
@@ -40,7 +40,10 @@ function App() {
           <a href='add-product' className='btn'>
             Add
           </a>
-          <button className='btn' id='delete-product-btn'>
+          <button
+            className='btn'
+            id='delete-product-btn'
+            onClick={handleDelete}>
             Mass Delete
           </button>
         </div>
@@ -56,6 +59,7 @@ function App() {
               attribute={'Attr'}
               value={data.p_value}
               key={index}
+              id={index}
             />
           );
         })}

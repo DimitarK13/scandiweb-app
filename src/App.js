@@ -7,15 +7,30 @@ function App() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
+    fetchData();
+  }, []);
+
+  async function fetchData() {
     axios
       .get('http://localhost/skandiweb-app/api/index.php')
       .then((response) => {
-        setData(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
+        const data = response.data;
+        data.forEach((object) => {
+          const { p_sku, p_name, p_price, p_value } = object;
+          setData((prevValues) => {
+            return [
+              ...prevValues,
+              {
+                p_sku,
+                p_name,
+                p_price,
+                p_value,
+              },
+            ];
+          });
+        });
       });
-  }, []);
+  }
 
   return (
     <div className='container'>
@@ -32,27 +47,18 @@ function App() {
       </header>
 
       <main>
-        <Card
-          sku={data[0]}
-          name={data[1]}
-          price={data[2]}
-          attribute={data[3]}
-          value={data[4]}
-        />
-        <Card
-          sku={data[0]}
-          name={data[1]}
-          price={data[2]}
-          attribute={data[3]}
-          value={data[4]}
-        />
-        <Card
-          sku={data[0]}
-          name={data[1]}
-          price={data[2]}
-          attribute={data[3]}
-          value={data[4]}
-        />
+        {data.map((data, index) => {
+          return (
+            <Card
+              sku={data.p_sku}
+              name={data.p_name}
+              price={data.p_price}
+              attribute={'Attr'}
+              value={data.p_value}
+              key={index}
+            />
+          );
+        })}
       </main>
     </div>
   );

@@ -3,8 +3,40 @@
    header("Access-Control-Allow-Headers: *");
    header("Access-Control-Allow-Methods: *");
 
-    $arr = array('JVC200123', 'CD', '2', 'Size', '700MB');
-    $json_arr = json_encode($arr);
+    class Database
+  {
+    private $host = "localhost";
+    private $user = "root";
+    private $password = "";
+    private $dbname = "scandiweb_app";
+    private $dsn;
+    private $pdo;
 
-    echo $json_arr;
+    public function __construct()
+    {
+      $this->dsn = "mysql:host=" . $this->host . ";dbname=" . $this->dbname;
+
+      $this->pdo = new PDO($this->dsn, $this->user, $this->password);
+
+      $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }
+
+    public function getData(){
+      $sql = "SELECT * FROM products";
+
+      $stmt = $this->pdo->prepare($sql);
+      $stmt->execute();
+      $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+      return $data;
+    }
+  }
+
+  $database = new Database();
+  $data = $database->getData();
+
+  $json_data = json_encode($data);
+
+  header('Content-Type: application/json');
+  echo $json_data;
 ?>

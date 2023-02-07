@@ -30,6 +30,10 @@
     }
   }
 
+  if(($_SERVER['REQUEST_METHOD'] == 'DELETE')&& (isset($_DELETE[$parameter]))){
+    $value = $_DELETE[$parameter];
+    echo $value;
+}
   $database = new Database();
   $data = $database->getData();
 

@@ -88,3 +88,22 @@ main {
 .option {
   display: none;
 }
+
+.form-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.25rem;
+}
+
+.form-item label {
+  margin-bottom: 0.35em;
+}
+
+.form-item input,
+.form-item select {
+  width: 350px;
+}
+
+.err {
+  color: red;
+}

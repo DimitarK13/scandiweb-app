@@ -89,19 +89,20 @@ main {
   display: none;
 }
 
-.form-item {
+form,
+form > div {
   display: flex;
   flex-direction: column;
-  margin-bottom: 1.25rem;
 }
 
-.form-item label {
+form label {
   margin-bottom: 0.35em;
 }
 
-.form-item input,
-.form-item select {
+form input,
+form select {
   width: 350px;
+  margin-bottom: 1.25rem;
 }
 
 .err {

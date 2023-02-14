@@ -2,9 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Add() {
-  const [inputs, setInputs] = useState({});
-  const [attributes, setAttributes] = useState({});
   const [fullForm, setFullForm] = useState({});
+  const [dimensions, setDimensions] = useState({});
 
   const switchType = (e) => {
     const selectedOption = e.target.value;
@@ -20,29 +19,38 @@ export default function Add() {
     });
 
     document.getElementById(selectedOption).style.display = 'flex';
-    setAttributes({});
   };
 
   const handleInputs = (e) => {
     const { name, value } = e.target;
 
-    if (value) {
-      setInputs((prevValues) => ({ ...prevValues, [name]: value }));
-    }
+    setFullForm((prevValues) => ({ ...prevValues, [name]: value }));
   };
 
   const handleAttributes = (e) => {
     const { name, value } = e.target;
 
-    if (value) {
-      setAttributes((prevValues) => ({ ...prevValues, [name]: value }));
+    if (name === 'size') {
+      setFullForm((prevValues) => ({
+        ...prevValues,
+        attr: `Size: ${value} MB`,
+      }));
+    } else if (name === 'weight') {
+      setFullForm((prevValues) => ({
+        ...prevValues,
+        attr: `Weight: ${value} KG`,
+      }));
+    } else if (name === 'width' || name === 'height' || name === 'length') {
+      setFullForm((prevValues) => ({
+        ...prevValues,
+        attr: `Dimensions: ${dimensions.width}x${dimensions.height}x${dimensions.length}`,
+      }));
     }
   };
 
   const handleForm = (e) => {
     e.preventDefault();
 
-    setFullForm({ ...inputs, ...attributes });
     console.log(fullForm);
   };
 
@@ -68,12 +76,24 @@ export default function Add() {
           <label htmlFor='sku'>
             SKU <span className='skuErr err'></span>
           </label>
-          <input type='text' name='sku' id='sku' onChange={handleInputs} />
+          <input
+            type='text'
+            name='sku'
+            id='sku'
+            onChange={handleInputs}
+            required
+          />
 
           <label htmlFor='name'>
             Name <span className='nameErr err'></span>
           </label>
-          <input type='text' name='name' id='name' onChange={handleInputs} />
+          <input
+            type='text'
+            name='name'
+            id='name'
+            onChange={handleInputs}
+            required
+          />
 
           <label htmlFor='price'>
             Price ($) <span className='priceErr err'></span>
@@ -84,6 +104,7 @@ export default function Add() {
             id='price'
             min='1'
             onChange={handleInputs}
+            required
           />
 
           <label htmlFor='productType'>Type Switcher</label>
@@ -108,23 +129,36 @@ export default function Add() {
               onChange={handleAttributes}
             />
           </div>
-          <div id='Furniture' className='option'>
-            <label htmlFor='height'>Height (CM)</label>
-            <input
-              type='number'
-              name='height'
-              id='height'
-              min='1'
-              onChange={handleAttributes}
-            />
 
+          <div id='Furniture' className='option'>
             <label htmlFor='width'>Width (CM)</label>
             <input
               type='number'
               name='width'
               id='width'
               min='1'
-              onChange={handleAttributes}
+              onChange={(e) => {
+                setDimensions((prevValues) => ({
+                  ...prevValues,
+                  width: e.target.value,
+                }));
+              }}
+              onBlur={handleAttributes}
+            />
+
+            <label htmlFor='height'>Height (CM)</label>
+            <input
+              type='number'
+              name='height'
+              id='height'
+              min='1'
+              onChange={(e) => {
+                setDimensions((prevValues) => ({
+                  ...prevValues,
+                  height: e.target.value,
+                }));
+              }}
+              onBlur={handleAttributes}
             />
 
             <label htmlFor='length'>Length (CM)</label>
@@ -133,9 +167,16 @@ export default function Add() {
               name='length'
               id='length'
               min='1'
-              onChange={handleAttributes}
+              onChange={(e) => {
+                setDimensions((prevValues) => ({
+                  ...prevValues,
+                  length: e.target.value,
+                }));
+              }}
+              onBlur={handleAttributes}
             />
           </div>
+
           <div id='Book' className='option'>
             <label htmlFor='weight'>Weight (KG)</label>
             <input

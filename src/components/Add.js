@@ -21,12 +21,6 @@ export default function Add() {
     document.getElementById(selectedOption).style.display = 'flex';
   };
 
-  const handleInputs = (e) => {
-    const { name, value } = e.target;
-
-    setFullForm((prevValues) => ({ ...prevValues, [name]: value }));
-  };
-
   const handleAttributes = (e) => {
     const { name, value } = e.target;
 
@@ -45,6 +39,8 @@ export default function Add() {
         ...prevValues,
         attr: `Dimensions: ${dimensions.width}x${dimensions.height}x${dimensions.length}`,
       }));
+    } else {
+      setFullForm((prevValues) => ({ ...prevValues, [name]: value }));
     }
   };
 
@@ -73,37 +69,31 @@ export default function Add() {
       </header>
       <main>
         <form id='product_form'>
-          <label htmlFor='sku'>
-            SKU <span className='skuErr err'></span>
-          </label>
+          <label htmlFor='sku'>SKU</label>
           <input
             type='text'
             name='sku'
             id='sku'
-            onChange={handleInputs}
+            onChange={handleAttributes}
             required
           />
 
-          <label htmlFor='name'>
-            Name <span className='nameErr err'></span>
-          </label>
+          <label htmlFor='name'>Name</label>
           <input
             type='text'
             name='name'
             id='name'
-            onChange={handleInputs}
+            onChange={handleAttributes}
             required
           />
 
-          <label htmlFor='price'>
-            Price ($) <span className='priceErr err'></span>
-          </label>
+          <label htmlFor='price'>Price ($)</label>
           <input
             type='number'
             name='price'
             id='price'
             min='1'
-            onChange={handleInputs}
+            onChange={handleAttributes}
             required
           />
 
@@ -128,6 +118,8 @@ export default function Add() {
               min='1'
               onChange={handleAttributes}
             />
+
+            <em>Please provide size in megabytes (MB)</em>
           </div>
 
           <div id='Furniture' className='option'>
@@ -175,6 +167,8 @@ export default function Add() {
               }}
               onBlur={handleAttributes}
             />
+
+            <em>Please provide dimensions in centimeters (CM)</em>
           </div>
 
           <div id='Book' className='option'>
@@ -186,6 +180,8 @@ export default function Add() {
               min='1'
               onChange={handleAttributes}
             />
+
+            <em>Please provide weight in kilograms (KG)</em>
           </div>
         </form>
       </main>

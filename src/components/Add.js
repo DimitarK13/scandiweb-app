@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function Add() {
+  const navigate = useNavigate();
   const [fullForm, setFullForm] = useState({});
   const [dimensions, setDimensions] = useState({});
 
@@ -47,7 +49,12 @@ export default function Add() {
   const handleForm = (e) => {
     e.preventDefault();
 
-    console.log(fullForm);
+    axios
+      .post('http://localhost/skandiweb-app/api/index.php', fullForm)
+      .then((response) => {
+        console.log(response.data);
+        navigate('/');
+      });
   };
 
   return (

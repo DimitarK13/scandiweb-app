@@ -3,42 +3,50 @@
   header("Access-Control-Allow-Headers: *");
   header("Access-Control-Allow-Methods: *");
 
-  class Database {
-    private $host = "localhost";
-    private $user = "root";
-    private $password = "";
-    private $dbname = "scandiweb_app";
-    private $dsn;
-    private $pdo;
+  include 'DbConnect.php';
+  $objDb = new DbConnect;
+  $conn = $objDb->connect();
 
-    public function __construct() {
-      $this->dsn = "mysql:host=" . $this->host . ";dbname=" . $this->dbname;
+  $method = $_SERVER['REQUEST_METHOD'];
+  
+  switch($method) {
+    case 'POST': 
+      $product = json_decode(file_get_contents('php://input')); 
+      $sql = 'INSERT INTO products(p_sku, p_name, p_price, p_value) VALUES (:p_sku, :p_name, :p_price, :p_value)';
+      $stmt = $conn->prepare($sql);
+      $stmt->bindParam(':p_sku', $product->sku);
+      $stmt->bindParam(':p_name', $product->name);
+      $stmt->bindParam(':p_price', $product->price);
+      $stmt->bindParam(':p_value', $product->attr);
+      if ($stmt->execute()) {
+        $response = ['status' => 1, 'message' => 'Added successfully'];
+      } else {
+        $response = ['status' => 0, 'message' => 'Failed '];
+      }
+      echo json_encode($response);
+      break;
 
-      $this->pdo = new PDO($this->dsn, $this->user, $this->password);
-
-      $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    }
-
-    public function getData(){
-      $sql = "SELECT * FROM products";
-
-      $stmt = $this->pdo->prepare($sql);
+    case 'GET': 
+      $sql = 'SELECT * FROM products';
+      $stmt = $conn->prepare($sql);
       $stmt->execute();
-      $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      echo json_encode($products);
+      break;
 
-      return $data;
-    }
+    case 'DELETE': 
+      $sql = 'DELETE FROM products WHERE p_sku = :sku';
+      $path = explode('/', $_SERVER['REQUEST_URI']);
+
+      $stmt = $conn->prepare($sql);
+      $stmt->bindParam(':sku', $path[4]);
+
+      if ($stmt->execute()) {
+        $response = ['status' => 1, 'message' => 'Deleted successfully'];
+      } else {
+        $response = ['status' => 0, 'message' => 'Failed to delete'];
+      }
+      echo json_encode($response);
+      break;
   }
-
-  if(($_SERVER['REQUEST_METHOD'] == 'DELETE')&& (isset($_DELETE[$parameter]))){
-    $value = $_DELETE[$parameter];
-    echo $value;
-}
-  $database = new Database();
-  $data = $database->getData();
-
-  $json_data = json_encode($data);
-
-  header('Content-Type: application/json');
-  echo $json_data;
 ?>

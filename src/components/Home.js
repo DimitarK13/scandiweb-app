@@ -26,8 +26,14 @@ export default function Home() {
       if (checkbox[i].checked) {
         const parent = checkbox[i].parentNode;
         sku = parent.firstChild.textContent;
-        // parent.style.display = 'none';
-        axios.delete(`http://localhost/skandiweb-app/api/index.php/${sku}`);
+
+        axios
+          .delete(`http://localhost/skandiweb-app/api/index.php/${sku}`)
+          .then((response) => {
+            console.log(response.data);
+            fetchData();
+            checkbox[i].checked = false;
+          });
       }
     }
   };
@@ -55,7 +61,6 @@ export default function Home() {
               sku={data.p_sku}
               name={data.p_name}
               price={data.p_price}
-              attribute={'Attr'}
               value={data.p_value}
               key={index}
               id={index}

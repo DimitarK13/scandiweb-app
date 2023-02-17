@@ -4,9 +4,7 @@ export default function Card(props) {
       <p>{props.sku}</p>
       <p>{props.name}</p>
       <p>{props.price}$</p>
-      <p>
-        {props.attribute}: {props.value}
-      </p>
+      <p>{props.value}</p>
       <input type='checkbox' className='delete-checkbox' />
     </div>
   );

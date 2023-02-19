@@ -1,10 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Add() {
   const navigate = useNavigate();
-  const [fullForm, setFullForm] = useState({});
+  const [allSKU, setSKUs] = useState([]);
+  const [fullForm, setFullForm] = useState({
+    sku: '',
+    name: '',
+    price: '',
+    attr: '',
+  });
   const [dimensions, setDimensions] = useState({});
 
   const switchType = (e) => {
@@ -49,13 +55,46 @@ export default function Add() {
   const handleForm = (e) => {
     e.preventDefault();
 
-    axios
-      .post('http://localhost/skandiweb-app/api/index.php', fullForm)
-      .then((response) => {
-        console.log(response.data);
-        navigate('/');
-      });
+    const handleErrors = () => {
+      const errMsg = document.querySelector('#errMsg');
+
+      if (allSKU.includes(fullForm.sku)) {
+        errMsg.textContent = 'This SKU alredy exists. Please enter a new one.';
+      } else {
+        for (let [name, value] of Object.entries(fullForm)) {
+          if (!value) {
+            errMsg.textContent = `Please specify ${name}`;
+            return false;
+          }
+        }
+      }
+
+      return true;
+    };
+
+    if (handleErrors()) {
+      axios
+        .post('http://localhost/skandiweb-app/api/index.php', fullForm)
+        .then((response) => {
+          console.log(response.data);
+          navigate('/');
+        });
+    }
   };
+
+  useEffect(() => {
+    axios
+      .get('http://localhost/skandiweb-app/api/index.php')
+      .then((response) => {
+        const allItems = response.data;
+
+        allItems.forEach((row) => {
+          setSKUs((prevValues) => {
+            return [...prevValues, row.p_sku];
+          });
+        });
+      });
+  }, []);
 
   return (
     <div className='container'>
@@ -191,6 +230,7 @@ export default function Add() {
             <em>Please provide weight in kilograms (KG)</em>
           </div>
         </form>
+        <strong id='errMsg' style={{ color: 'red' }}></strong>
       </main>
     </div>
   );

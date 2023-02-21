@@ -26,7 +26,7 @@ export default function Home() {
         sku = parent.firstChild.textContent;
 
         axios
-          .delete(`https://scandi-web.herokuapp.com/${sku}`)
+          .delete(`https://scandi-web.herokuapp.com/index.php/${sku}`)
           .then((response) => {
             console.log(response.data);
             fetchData();

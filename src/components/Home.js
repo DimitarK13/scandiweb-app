@@ -11,11 +11,9 @@ export default function Home() {
   }, []);
 
   async function fetchData() {
-    axios
-      .get('http://localhost/skandiweb-app/api/index.php')
-      .then((response) => {
-        setData(response.data);
-      });
+    axios.get('https://scandi-web.herokuapp.com/').then((response) => {
+      setData(response.data);
+    });
   }
 
   const handleDelete = () => {
@@ -28,7 +26,7 @@ export default function Home() {
         sku = parent.firstChild.textContent;
 
         axios
-          .delete(`http://localhost/skandiweb-app/api/index.php/${sku}`)
+          .delete(`https://scandi-web.herokuapp.com/${sku}`)
           .then((response) => {
             console.log(response.data);
             fetchData();

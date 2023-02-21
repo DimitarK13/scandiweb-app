@@ -88,7 +88,7 @@ export default function Add() {
 
     if (handleErrors()) {
       axios
-        .post('http://localhost/skandiweb-app/api/index.php', fullForm)
+        .post('https://scandi-web.herokuapp.com/', fullForm)
         .then((response) => {
           console.log(response.data);
           navigate('/');
@@ -97,17 +97,15 @@ export default function Add() {
   };
 
   useEffect(() => {
-    axios
-      .get('http://localhost/skandiweb-app/api/index.php')
-      .then((response) => {
-        const allItems = response.data;
+    axios.get('https://scandi-web.herokuapp.com/').then((response) => {
+      const allItems = response.data;
 
-        allItems.forEach((row) => {
-          setSKUs((prevValues) => {
-            return [...prevValues, row.p_sku];
-          });
+      allItems.forEach((row) => {
+        setSKUs((prevValues) => {
+          return [...prevValues, row.p_sku];
         });
       });
+    });
   }, []);
 
   return (

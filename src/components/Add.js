@@ -88,7 +88,7 @@ export default function Add() {
 
     if (handleErrors()) {
       axios
-        .post('https://scandi-web.herokuapp.com/', fullForm)
+        .post('https://scandi-web.herokuapp.com/index.php', fullForm)
         .then((response) => {
           console.log(response.data);
           navigate('/');
@@ -97,7 +97,7 @@ export default function Add() {
   };
 
   useEffect(() => {
-    axios.get('https://scandi-web.herokuapp.com/').then((response) => {
+    axios.get('https://scandi-web.herokuapp.com/index.php').then((response) => {
       const allItems = response.data;
 
       allItems.forEach((row) => {

@@ -11,7 +11,7 @@ export default function Home() {
   }, []);
 
   async function fetchData() {
-    axios.get('https://scandi-web.herokuapp.com/').then((response) => {
+    axios.get('https://scandi-web.herokuapp.com/index.php').then((response) => {
       setData(response.data);
     });
   }

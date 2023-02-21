@@ -30,23 +30,36 @@ export default function Add() {
   };
 
   const handleAttributes = (e) => {
+    const errMsg = document.querySelector('#errMsg');
     const { name, value } = e.target;
 
     if (name === 'size') {
-      setFullForm((prevValues) => ({
-        ...prevValues,
-        attr: `Size: ${value} MB`,
-      }));
+      if (value <= 0) {
+        errMsg.textContent = 'Value must be above 0';
+      } else {
+        setFullForm((prevValues) => ({
+          ...prevValues,
+          attr: `Size: ${value} MB`,
+        }));
+      }
     } else if (name === 'weight') {
-      setFullForm((prevValues) => ({
-        ...prevValues,
-        attr: `Weight: ${value} KG`,
-      }));
+      if (value <= 0) {
+        errMsg.textContent = 'Value must be above 0';
+      } else {
+        setFullForm((prevValues) => ({
+          ...prevValues,
+          attr: `Weight: ${value} KG`,
+        }));
+      }
     } else if (name === 'width' || name === 'height' || name === 'length') {
-      setFullForm((prevValues) => ({
-        ...prevValues,
-        attr: `Dimensions: ${dimensions.width}x${dimensions.height}x${dimensions.length}`,
-      }));
+      if (value <= 0) {
+        errMsg.textContent = 'Values must be above 0';
+      } else {
+        setFullForm((prevValues) => ({
+          ...prevValues,
+          attr: `Dimensions: ${dimensions.width}x${dimensions.height}x${dimensions.length}`,
+        }));
+      }
     } else {
       setFullForm((prevValues) => ({ ...prevValues, [name]: value }));
     }
@@ -60,9 +73,10 @@ export default function Add() {
 
       if (allSKU.includes(fullForm.sku)) {
         errMsg.textContent = 'This SKU alredy exists. Please enter a new one.';
+        return false;
       } else {
         for (let [name, value] of Object.entries(fullForm)) {
-          if (!value) {
+          if (value === '' || value <= 0) {
             errMsg.textContent = `Please specify ${name}`;
             return false;
           }
